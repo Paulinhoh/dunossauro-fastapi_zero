@@ -16,3 +16,6 @@ htmlcov/
 
 # .env
 .env
+
+# project stuff
+database.db
