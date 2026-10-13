@@ -21,3 +21,8 @@ class UserPublic(BaseModel):  # dto
 
 class UserList(BaseModel):  # reponse: read_users
     users: list[UserPublic]
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
