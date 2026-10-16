@@ -1,0 +1,20 @@
+{
+  "files.exclude": {
+    "**/.idea": true,
+    "**/.pytest_cache": true,
+    "**/.ruff_cache": true,
+    "**/__pycache__": true,
+    "**/*.pyc": true,
+    "**/.coverage": true,
+    "**/htmlcov": true
+  },
+  "search.exclude": {
+    "**/.idea": true,
+    "**/.pytest_cache": true,
+    "**/.ruff_cache": true,
+    "**/__pycache__": true,
+    "**/*.pyc": true,
+    "**/.coverage": true,
+    "**/htmlcov": true
+  }
+}

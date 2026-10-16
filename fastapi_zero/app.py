@@ -13,12 +13,12 @@ app.include_router(users.router)
 
 
 @app.get('/', status_code=HTTPStatus.OK, response_model=Message)
-def read_root():
+async def read_root():
     return {'message': 'Olá, mundo!'}
 
 
 @app.get(
     '/exercicio-html/', status_code=HTTPStatus.OK, response_class=HTMLResponse
 )
-def exercicio_aula_02():
+async def exercicio_aula_02():
     return '<h1>Olá, mundo!</h1>'
