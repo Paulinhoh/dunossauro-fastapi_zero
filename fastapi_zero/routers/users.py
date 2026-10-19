@@ -41,11 +41,12 @@ async def create_user(user: UserSchema, session: AsyncSession):
         if db_user.username == user.username:
             raise HTTPException(
                 status_code=HTTPStatus.CONFLICT,
-                detail='Username already exists.',
+                detail='Username or Email already exists.',
             )
         elif db_user.email == user.email:
             raise HTTPException(
-                status_code=HTTPStatus.CONFLICT, detail='Email already exists.'
+                status_code=HTTPStatus.CONFLICT,
+                detail='Username or Email already exists.',
             )
 
     # se não der o erro

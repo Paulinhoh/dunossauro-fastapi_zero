@@ -35,7 +35,7 @@ def test_create_user_should_return_409_username_exists__exercicio(
     )
 
     assert response.status_code == HTTPStatus.CONFLICT
-    assert response.json() == {'detail': 'Username already exists.'}
+    assert response.json() == {'detail': 'Username or Email already exists.'}
 
 
 def test_create_user_should_return_409_email_exists__exercicio(client, user):
@@ -49,7 +49,7 @@ def test_create_user_should_return_409_email_exists__exercicio(client, user):
     )
 
     assert response.status_code == HTTPStatus.CONFLICT
-    assert response.json() == {'detail': 'Email already exists.'}
+    assert response.json() == {'detail': 'Username or Email already exists.'}
 
 
 # get
@@ -77,44 +77,18 @@ def test_update_user(client, user, token):
 
     assert response.status_code == HTTPStatus.OK
     assert response.json() == {
-        'id': 1,
+        'id': user.id,
         'username': 'bob',
         'email': 'bob@example.com',
     }
 
 
-def test_update_user_forbidden(client, token):
-    response = client.put(
-        '/users/0',
-        headers={'Authorization': f'Bearer {token}'},
-        json={
-            'username': 'bob',
-            'email': 'bob@example.com',
-            'password': 'senha_segura',
-        },
-    )
-
-    assert response.status_code == HTTPStatus.FORBIDDEN
-    assert response.json() == {'detail': 'Not enough permissions!'}
-
-
-def test_update_user_integrity_error(client, user, token):
-    # inserindo um usuario
-    client.post(
-        '/users',
-        json={
-            'username': 'Bob',
-            'email': 'bob@example.com',
-            'password': 'senha_segura',
-        },
-    )
-
-    # alterando o user das fixture para o Bob
+def test_update_user_integrity_error(client, user, other_user, token):
     response_update = client.put(
         f'/users/{user.id}',
         headers={'Authorization': f'Bearer {token}'},
         json={
-            'username': 'Bob',
+            'username': other_user.username,
             'email': 'bob@example.com',
             'password': 'nova_senha_segura',
         },
@@ -124,6 +98,21 @@ def test_update_user_integrity_error(client, user, token):
     assert response_update.json() == {
         'detail': 'Username or Email already exists.'
     }
+
+
+def test_update_user_with_wrong_user(client, other_user, token):
+    response = client.put(
+        f'/users/{other_user.id}',
+        headers={'Authorization': f'Bearer {token}'},
+        json={
+            'username': 'bob',
+            'email': 'bob@example.com',
+            'password': 'nova_senha_segura',
+        },
+    )
+
+    assert response.status_code == HTTPStatus.FORBIDDEN
+    assert response.json() == {'detail': 'Not enough permissions!'}
 
 
 # get by id
@@ -164,9 +153,9 @@ def test_delete_user(client, user, token):
     }
 
 
-def test_delete_user_forbidden(client, token):
+def test_delete_user_wrong_user(client, other_user, token):
     response = client.delete(
-        '/users/0',
+        f'/users/{other_user.id}',
         headers={'Authorization': f'Bearer {token}'},
     )
 
