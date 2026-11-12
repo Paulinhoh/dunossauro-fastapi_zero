@@ -18,7 +18,7 @@ jobs:
         run: pipx install poetry
 
       - name: Instalar dependências
-        run: poetry install
+        run: poetry install --no-root
 
       - name: Executar o linter
         run: poetry run task lint
